@@ -8,11 +8,7 @@ import {
   fetchBookedSlots,
   createBooking,
 } from '../../services/bookingService';
-import {
-  createFullPayment,
-  createInstalmentPlan,
-  MAX_INSTALMENTS,
-} from '../../services/paymentService';
+import { createFullPayment } from '../../services/paymentService';
 import { openRazorpayCheckout } from '../../services/razorpayService';
 import { useAuthStore } from '../../store/authStore';
 import { Service } from '../../types';
@@ -85,19 +81,13 @@ export default function BookingScreen({ route, navigation }: Props) {
     };
   }, [selectedDate]);
 
-  const confirmBooking = async (mode: 'full' | 'instalment') => {
+  const confirmBooking = async () => {
     if (!user || !service || !selectedSlot) return;
     try {
       setSubmitting(true);
 
-      // Amount to charge now.
-      let chargeAmount = service.price;
-      if (mode === 'instalment') {
-        chargeAmount = Math.ceil(service.price / MAX_INSTALMENTS);
-      }
-
       const payment = await openRazorpayCheckout({
-        amount: chargeAmount,
+        amount: service.price,
         name: 'BeautyApp',
         description: `${service.name} on ${selectedDate} at ${selectedSlot}`,
         prefillName: user.name,
@@ -124,23 +114,13 @@ export default function BookingScreen({ route, navigation }: Props) {
         totalAmount: service.price,
       });
 
-      if (mode === 'full') {
-        await createFullPayment({
-          customerId: user.uid,
-          customerName: user.name,
-          referenceType: 'booking',
-          referenceId: bookingId,
-          totalAmount: service.price,
-        });
-      } else {
-        await createInstalmentPlan({
-          customerId: user.uid,
-          customerName: user.name,
-          referenceType: 'booking',
-          referenceId: bookingId,
-          totalAmount: service.price,
-        });
-      }
+      await createFullPayment({
+        customerId: user.uid,
+        customerName: user.name,
+        referenceType: 'booking',
+        referenceId: bookingId,
+        totalAmount: service.price,
+      });
 
       setToast(
         payAtCounter ? 'Booking confirmed! Pay at the counter.' : 'Booking confirmed!',
@@ -168,8 +148,6 @@ export default function BookingScreen({ route, navigation }: Props) {
       </View>
     );
   }
-
-  const instalmentAmount = Math.ceil(service.price / MAX_INSTALMENTS);
 
   return (
     <View className="flex-1 bg-white">
@@ -283,20 +261,10 @@ export default function BookingScreen({ route, navigation }: Props) {
             buttonColor={COLORS.primary}
             disabled={!selectedSlot || submitting}
             loading={submitting}
-            onPress={() => confirmBooking('full')}
+            onPress={() => confirmBooking()}
             contentStyle={{ paddingVertical: 4 }}
           >
             Pay Full Amount (₹{service.price})
-          </Button>
-          <Button
-            mode="outlined"
-            textColor={COLORS.primary}
-            style={{ borderColor: COLORS.primary, marginTop: 12 }}
-            disabled={!selectedSlot || submitting}
-            onPress={() => confirmBooking('instalment')}
-            contentStyle={{ paddingVertical: 4 }}
-          >
-            Pay in Instalments (₹{instalmentAmount} × {MAX_INSTALMENTS})
           </Button>
         </View>
       </ScrollView>

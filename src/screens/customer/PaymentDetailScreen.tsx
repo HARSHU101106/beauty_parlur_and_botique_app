@@ -5,7 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { format } from 'date-fns';
-import { fetchPaymentById, openRazorpayCheckout } from '../../services/paymentService';
+import { fetchPaymentById } from '../../services/paymentService';
+import { openRazorpayCheckout } from '../../services/razorpayService';
 import { recordInstalment } from '../../services/instalmentService';
 import { useAuthStore } from '../../store/authStore';
 import { Payment } from '../../types';
@@ -51,13 +52,29 @@ export default function PaymentDetailScreen({ route }: Props) {
     try {
       const result = await openRazorpayCheckout({
         amount,
-        customerName: user.name,
-        customerEmail: user.email,
-        customerPhone: user.phone,
+        name: 'BeautyApp',
         description: `Instalment for ${payment.referenceType} ${payment.referenceId}`,
+        prefillName: user.name,
+        prefillEmail: user.email,
+        prefillContact: user.phone,
       });
-      await recordInstalment(payment.id, amount, result.razorpay_payment_id);
-      setToast('Payment recorded!');
+
+      // If Razorpay isn't configured, fall back to paying at the counter
+      // instead of blocking the customer.
+      const payAtCounter =
+        !result.success && /not configured/i.test(result.error ?? '');
+      if (!result.success && !payAtCounter) {
+        setToast(result.error ?? 'Payment was not completed');
+        return;
+      }
+
+      await recordInstalment(
+        payment.id,
+        amount,
+        result.paymentId ?? `COUNTER-${Date.now()}`,
+        payAtCounter ? 'cash' : 'razorpay',
+      );
+      setToast(payAtCounter ? 'Recorded! Pay at the counter.' : 'Payment recorded!');
       await load();
     } catch (e: any) {
       setToast(e?.message ?? 'Payment was not completed');
@@ -84,14 +101,24 @@ export default function PaymentDetailScreen({ route }: Props) {
     );
   }
 
-  const nextInstalment =
+  // Per-instalment amount: prefer the stored value, otherwise fall back to an
+  // even split of the total across the allowed number of instalments. This keeps
+  // older plans (created before instalmentAmount was stored) working too.
+  const perInstalment =
     payment.instalmentAmount && payment.instalmentAmount > 0
-      ? Math.min(payment.instalmentAmount, payment.remainingAmount)
-      : payment.remainingAmount;
+      ? payment.instalmentAmount
+      : Math.ceil(
+          payment.totalAmount /
+            (payment.numberOfInstalments || payment.maxInstalments || 1),
+        );
+
+  const nextInstalment = Math.min(perInstalment, payment.remainingAmount);
 
   const isPaid = payment.remainingAmount <= 0 || payment.status === 'paid';
   const showInstalmentBtn =
-    payment.paymentMode === 'instalment' && nextInstalment < payment.remainingAmount;
+    payment.paymentMode === 'instalment' &&
+    !isPaid &&
+    nextInstalment < payment.remainingAmount;
 
   return (
     <View className="flex-1 bg-white">
@@ -169,7 +196,7 @@ export default function PaymentDetailScreen({ route }: Props) {
           )}
           <Button
             mode={showInstalmentBtn ? 'outlined' : 'contained'}
-            buttonColor={COLORS.primary}
+            buttonColor={showInstalmentBtn ? '#fff' : COLORS.primary}
             textColor={showInstalmentBtn ? COLORS.primary : '#fff'}
             style={{ borderColor: COLORS.primary, marginTop: showInstalmentBtn ? 10 : 0 }}
             loading={paying}

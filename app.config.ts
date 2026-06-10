@@ -1,4 +1,13 @@
 import { ExpoConfig, ConfigContext } from 'expo/config';
+import { existsSync } from 'fs';
+
+// Only attach the native google-services.json when it is actually present.
+// It is git-ignored, so it won't exist on EAS Build cloud workers — the app
+// uses the Firebase JS SDK (configured via env vars below) and doesn't need it
+// to build or run.
+const googleServicesFile = existsSync('./google-services.json')
+  ? './google-services.json'
+  : undefined;
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -8,6 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/icon.png',
+  scheme: 'beautyparlour',
   userInterfaceStyle: 'light',
   ios: {
     supportsTablet: true,
@@ -16,7 +26,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   android: {
     package: 'com.beautyapp.app',
     versionCode: 1,
-    googleServicesFile: './google-services.json',
+    googleServicesFile,
     permissions: ['CAMERA', 'RECORD_AUDIO', 'READ_EXTERNAL_STORAGE'],
     adaptiveIcon: {
       backgroundColor: '#E6F4FE',

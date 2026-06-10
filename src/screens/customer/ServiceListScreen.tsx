@@ -10,7 +10,7 @@ import { BeautyStackParamList } from '../../navigation/types';
 
 type Props = StackScreenProps<BeautyStackParamList, 'ServiceList'>;
 
-const CATEGORIES = ['All', 'Facial', 'Threading', 'Waxing', 'Hair', 'Nails', 'Bridal'];
+const CATEGORIES = ['All', 'Facial', 'Threading', 'Waxing', 'Hair', 'Nails', 'Skin Care', 'Mehndi', 'Makeup'];
 
 export default function ServiceListScreen({ navigation }: Props) {
   const [services, setServices] = useState<Service[]>([]);

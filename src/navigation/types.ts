@@ -43,6 +43,7 @@ export type KidsStackParamList = {
 export type AccountStackParamList = {
   Account: undefined;
   MyBookings: undefined;
+  MyPreOrders: undefined;
   MyPayments: undefined;
   PaymentDetail: { paymentId: string };
   Feedback: { bookingId: string; serviceId: string; serviceName: string };

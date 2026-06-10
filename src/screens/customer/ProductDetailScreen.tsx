@@ -8,6 +8,9 @@ import {
   fetchActivePreBooking,
   createPreBooking,
 } from '../../services/productService';
+import { createInstalmentPlan, MAX_INSTALMENTS } from '../../services/paymentService';
+import { recordInstalment } from '../../services/instalmentService';
+import { openRazorpayCheckout } from '../../services/razorpayService';
 import { useAuthStore } from '../../store/authStore';
 import { Product, PreBooking } from '../../types';
 import { COLORS } from '../../constants';
@@ -22,6 +25,7 @@ export default function ProductDetailScreen({ route }: Props) {
   const [preBooking, setPreBooking] = useState<PreBooking | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [reserving, setReserving] = useState(false);
+  const [buying, setBuying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -66,6 +70,68 @@ export default function ProductDetailScreen({ route }: Props) {
       setToast(e?.message ?? 'Could not reserve product');
     } finally {
       setReserving(false);
+    }
+  };
+
+  const onBuyInstalments = async () => {
+    if (!user || !product) return;
+    try {
+      setBuying(true);
+
+      const firstInstalment = Math.ceil(product.price / MAX_INSTALMENTS);
+
+      // Collect the first instalment up front.
+      const result = await openRazorpayCheckout({
+        amount: firstInstalment,
+        name: 'BeautyApp Boutique',
+        description: `First instalment for ${product.name}`,
+        prefillName: user.name,
+        prefillEmail: user.email,
+        prefillContact: user.phone,
+      });
+
+      // If Razorpay isn't configured, let the customer pay the instalment at
+      // the counter instead of blocking the purchase.
+      const payAtCounter =
+        !result.success && /not configured/i.test(result.error ?? '');
+      if (!result.success && !payAtCounter) {
+        setToast(result.error ?? 'Payment was not completed');
+        return;
+      }
+
+      // Reserve the item (this also reduces stock atomically).
+      const preBookingId = await createPreBooking({
+        customerId: user.uid,
+        customerName: user.name,
+        product,
+      });
+
+      // Create the instalment plan and record the first payment against it.
+      const { paymentId } = await createInstalmentPlan({
+        customerId: user.uid,
+        customerName: user.name,
+        referenceType: 'preBooking',
+        referenceId: preBookingId,
+        totalAmount: product.price,
+      });
+      await recordInstalment(
+        paymentId,
+        firstInstalment,
+        result.paymentId ?? `COUNTER-${Date.now()}`,
+        payAtCounter ? 'cash' : 'razorpay',
+      );
+
+      const existing = await fetchActivePreBooking(user.uid, product.id);
+      setPreBooking(existing);
+      setToast(
+        payAtCounter
+          ? 'Reserved! Pay your instalments at the counter.'
+          : 'First instalment paid! See My Payments to pay the rest.',
+      );
+    } catch (e: any) {
+      setToast(e?.message ?? 'Could not complete purchase');
+    } finally {
+      setBuying(false);
     }
   };
 
@@ -140,16 +206,29 @@ export default function ProductDetailScreen({ route }: Props) {
             Already Reserved
           </Button>
         ) : (
-          <Button
-            mode="contained"
-            buttonColor={COLORS.primary}
-            loading={reserving}
-            disabled={reserving || !user}
-            onPress={onPreBook}
-            contentStyle={{ paddingVertical: 4 }}
-          >
-            Pre-Book for 10 Days
-          </Button>
+          <>
+            <Button
+              mode="contained"
+              buttonColor={COLORS.primary}
+              loading={reserving}
+              disabled={reserving || buying || !user || !inStock}
+              onPress={onPreBook}
+              contentStyle={{ paddingVertical: 4 }}
+            >
+              {inStock ? 'Pre-Book for 10 Days' : 'Out of Stock'}
+            </Button>
+            <Button
+              mode="outlined"
+              textColor={COLORS.primary}
+              style={{ borderColor: COLORS.primary, marginTop: 10 }}
+              loading={buying}
+              disabled={reserving || buying || !user || !inStock}
+              onPress={onBuyInstalments}
+              contentStyle={{ paddingVertical: 4 }}
+            >
+              Buy in Instalments (₹{Math.ceil(product.price / MAX_INSTALMENTS)} × {MAX_INSTALMENTS})
+            </Button>
+          </>
         )}
       </View>
 

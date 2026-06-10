@@ -5,7 +5,7 @@ import {
   getDocs,
   doc,
   getDoc,
-  addDoc,
+  runTransaction,
   Timestamp,
   limit,
 } from 'firebase/firestore';
@@ -65,6 +65,24 @@ export async function fetchActivePreBookings(
   );
 }
 
+/**
+ * Fetch ALL pre-bookings (purchase history) for a customer, regardless of
+ * status, newest first.
+ */
+export async function fetchCustomerPreBookings(
+  customerId: string,
+): Promise<PreBooking[]> {
+  const q = query(
+    collection(db, 'preBookings'),
+    where('customerId', '==', customerId),
+  );
+  const snap = await getDocs(q);
+  const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }) as PreBooking);
+  return list.sort(
+    (a, b) => (b.createdAt?.toMillis?.() ?? 0) - (a.createdAt?.toMillis?.() ?? 0),
+  );
+}
+
 interface CreatePreBookingArgs {
   customerId: string;
   customerName: string;
@@ -80,16 +98,33 @@ export async function createPreBooking({
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 10);
 
-  const ref = await addDoc(collection(db, 'preBookings'), {
-    customerId,
-    customerName,
-    productId: product.id,
-    productName: product.name,
-    quantity: 1,
-    totalAmount: product.price,
-    status: 'active',
-    expiresAt: Timestamp.fromDate(expiresAt),
-    createdAt: Timestamp.now(),
+  const preRef = doc(collection(db, 'preBookings'));
+
+  // Reserve one unit and create the pre-booking atomically so stock can never
+  // go negative if two customers reserve the last item at the same time.
+  await runTransaction(db, async (tx) => {
+    const prodRef = doc(db, 'products', product.id);
+    const prodSnap = await tx.get(prodRef);
+    if (!prodSnap.exists()) {
+      throw new Error('Product not found');
+    }
+    const stock = (prodSnap.data().stockCount as number) ?? 0;
+    if (stock <= 0) {
+      throw new Error('Product is out of stock');
+    }
+    tx.update(prodRef, { stockCount: stock - 1 });
+    tx.set(preRef, {
+      customerId,
+      customerName,
+      productId: product.id,
+      productName: product.name,
+      quantity: 1,
+      totalAmount: product.price,
+      status: 'active',
+      expiresAt: Timestamp.fromDate(expiresAt),
+      createdAt: Timestamp.now(),
+    });
   });
-  return ref.id;
+
+  return preRef.id;
 }

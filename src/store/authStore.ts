@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { User as FirebaseUser } from 'firebase/auth';
+import { signOut, User as FirebaseUser } from 'firebase/auth';
+import { auth } from '../services/firebase';
 import { User as AppUser } from '../types';
 
 interface AuthState {
@@ -12,6 +13,7 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   reset: () => void;
+  logout: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -24,4 +26,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   reset: () => set({ user: null, firebaseUser: null, isLoading: false, error: null }),
+  logout: async () => {
+    await signOut(auth);
+    set({ user: null, firebaseUser: null, isLoading: false, error: null });
+  },
 }));

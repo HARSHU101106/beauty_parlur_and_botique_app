@@ -25,7 +25,14 @@ service cloud.firestore {
 
     match /products/{productId} {
       allow read: if true;
-      allow write: if isAdmin();
+      allow create, delete: if isAdmin();
+      // Admins can edit freely. Any signed-in customer may only decrement the
+      // stock by exactly one unit (reserving/buying an item) and change nothing
+      // else.
+      allow update: if isAdmin() ||
+        (request.auth != null &&
+         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stockCount']) &&
+         request.resource.data.stockCount == resource.data.stockCount - 1);
     }
 
     match /bookings/{bookingId} {
@@ -38,13 +45,13 @@ service cloud.firestore {
     match /preBookings/{preBookingId} {
       allow read: if isAdmin() || isOwner(resource.data.customerId);
       allow create: if request.auth != null;
-      allow update: if isAdmin();
+      allow update: if isAdmin() || isOwner(resource.data.customerId);
     }
 
     match /payments/{paymentId} {
       allow read: if isAdmin() || isOwner(resource.data.customerId);
       allow create: if request.auth != null;
-      allow update: if isAdmin();
+      allow update: if isAdmin() || isOwner(resource.data.customerId);
     }
 
     match /feedback/{feedbackId} {

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { View, ScrollView, FlatList, TouchableOpacity, Image } from 'react-native';
 import { Text, ActivityIndicator } from 'react-native-paper';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,6 +19,14 @@ export default function KidsScreen({ navigation }: Props) {
   const [services, setServices] = useState<Service[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const scrollRef = useRef<ScrollView>(null);
+  const beautyY = useRef(0);
+  const boutiqueY = useRef(0);
+
+  const scrollTo = (y: number) => {
+    scrollRef.current?.scrollTo({ y: Math.max(y - 12, 0), animated: true });
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -46,6 +54,7 @@ export default function KidsScreen({ navigation }: Props) {
 
   return (
     <ScrollView
+      ref={scrollRef}
       className="flex-1"
       style={{ backgroundColor: COLORS.surface }}
       contentContainerStyle={{ paddingBottom: 28 }}
@@ -78,15 +87,29 @@ export default function KidsScreen({ navigation }: Props) {
 
       {/* Playful highlight chips */}
       <View className="flex-row px-5" style={{ gap: 10, marginTop: -16 }}>
-        <HighlightChip icon="cut" label="Kids Beauty" bg={COLORS.secondarySoft} color={COLORS.secondaryDark} />
-        <HighlightChip icon="shirt" label="Kids Boutique" bg={COLORS.primarySoft} color={COLORS.primaryDark} />
+        <HighlightChip
+          icon="cut"
+          label="Kids Beauty"
+          bg={COLORS.secondarySoft}
+          color={COLORS.secondaryDark}
+          onPress={() => scrollTo(beautyY.current)}
+        />
+        <HighlightChip
+          icon="shirt"
+          label="Kids Boutique"
+          bg={COLORS.primarySoft}
+          color={COLORS.primaryDark}
+          onPress={() => scrollTo(boutiqueY.current)}
+        />
       </View>
 
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.secondary} style={{ marginTop: 48 }} />
       ) : (
         <>
-          <SectionHeader title="Kids Beauty Services" emoji="✂️" />
+          <View onLayout={(e) => (beautyY.current = e.nativeEvent.layout.y)}>
+            <SectionHeader title="Kids Beauty Services" emoji="✂️" />
+          </View>
           {services.length === 0 ? (
             <EmptyHint text="No kids services yet. Check back soon!" />
           ) : (
@@ -104,7 +127,9 @@ export default function KidsScreen({ navigation }: Props) {
             </View>
           )}
 
-          <SectionHeader title="Kids Boutique" emoji="🧦" />
+          <View onLayout={(e) => (boutiqueY.current = e.nativeEvent.layout.y)}>
+            <SectionHeader title="Kids Boutique" emoji="🧦" />
+          </View>
           {products.length === 0 ? (
             <EmptyHint text="No kids products yet. Check back soon!" />
           ) : (
@@ -132,14 +157,18 @@ function HighlightChip({
   label,
   bg,
   color,
+  onPress,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   bg: string;
   color: string;
+  onPress?: () => void;
 }) {
   return (
-    <View
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={onPress}
       className="flex-1 flex-row items-center rounded-3xl px-4 py-3"
       style={[{ backgroundColor: COLORS.card }, SHADOWS.sm]}
     >
@@ -156,7 +185,7 @@ function HighlightChip({
         <Ionicons name={icon} size={20} color={color} />
       </View>
       <Text style={{ marginLeft: 10, fontWeight: '700', color: COLORS.text }}>{label}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
 

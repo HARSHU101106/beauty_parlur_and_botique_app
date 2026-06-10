@@ -13,6 +13,7 @@ import PreBookScreen from '../screens/customer/PreBookScreen';
 import KidsScreen from '../screens/customer/KidsScreen';
 import AccountScreen from '../screens/customer/AccountScreen';
 import MyBookingsScreen from '../screens/customer/MyBookingsScreen';
+import MyPreOrdersScreen from '../screens/customer/MyPreOrdersScreen';
 import MyPaymentsScreen from '../screens/customer/MyPaymentsScreen';
 import PaymentDetailScreen from '../screens/customer/PaymentDetailScreen';
 import FeedbackScreen from '../screens/customer/FeedbackScreen';
@@ -80,6 +81,7 @@ function AccountStack() {
     <AccountStackNav.Navigator screenOptions={{ headerTintColor: COLORS.primary }}>
       <AccountStackNav.Screen name="Account" component={AccountScreen} />
       <AccountStackNav.Screen name="MyBookings" component={MyBookingsScreen} options={{ title: 'My Bookings' }} />
+      <AccountStackNav.Screen name="MyPreOrders" component={MyPreOrdersScreen} options={{ title: 'My Purchases' }} />
       <AccountStackNav.Screen name="MyPayments" component={MyPaymentsScreen} options={{ title: 'My Payments' }} />
       <AccountStackNav.Screen name="PaymentDetail" component={PaymentDetailScreen} options={{ title: 'Payment Details' }} />
       <AccountStackNav.Screen name="Feedback" component={FeedbackScreen} options={{ title: 'Leave a Review' }} />

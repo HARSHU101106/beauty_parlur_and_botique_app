@@ -1,4 +1,3 @@
-import RazorpayCheckout from 'react-native-razorpay';
 import {
   addDoc,
   collection,
@@ -60,6 +59,19 @@ export const openRazorpayCheckout = async (opts: {
   customerPhone: string;
   description: string;
 }): Promise<RazorpaySuccess> => {
+  // Lazily load the native Razorpay module so the app can still run inside
+  // Expo Go / web (where this native module is unavailable). It is only
+  // required when a checkout is actually opened on a real device / dev build.
+  let RazorpayCheckout: { open: (options: object) => Promise<unknown> };
+  try {
+    RazorpayCheckout = require('react-native-razorpay').default;
+  } catch {
+    throw new Error(
+      'Razorpay is not available in this environment. Use a development build ' +
+        'or a release build on a physical device to take payments.',
+    );
+  }
+
   const options = {
     description: opts.description,
     currency: 'INR',
@@ -255,6 +267,8 @@ export async function createInstalmentPlan(
     instalments: [],
     paymentMode: 'instalment',
     maxInstalments: MAX_INSTALMENTS,
+    numberOfInstalments: count,
+    instalmentAmount,
     status: 'pending',
     dueDate: Timestamp.fromDate(due),
     createdAt: Timestamp.now(),

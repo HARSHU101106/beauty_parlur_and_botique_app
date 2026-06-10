@@ -82,6 +82,8 @@ export default function AccountScreen({ navigation }: Props) {
       {/* Menu */}
       <MenuRow icon="calendar-outline" label="My Bookings" onPress={() => navigation.navigate('MyBookings')} />
       <Divider />
+      <MenuRow icon="bag-handle-outline" label="My Purchases" onPress={() => navigation.navigate('MyPreOrders')} />
+      <Divider />
       <MenuRow icon="card-outline" label="My Payments" onPress={() => navigation.navigate('MyPayments')} />
       <Divider />
       <MenuRow icon="star-outline" label="My Feedback" onPress={() => navigation.navigate('FeedbackHistory')} />
