@@ -1,184 +1,146 @@
-# Glamour Beauty & Boutique App — Project Report
+# Glamour — Beauty Parlour & Boutique Management App
 
-**A cross-platform Beauty Parlour & Boutique management application**
+### Project Report
 
 | | |
 |---|---|
-| **Project Name** | Glamour — Beauty Parlour & Boutique App (`beautyapp`) |
-| **Version** | 1.0.0 |
+| **Project Title** | Glamour — Beauty Parlour & Boutique Management Application |
+| **Application Type** | Cross-platform Mobile + Web Application |
 | **Platforms** | Android · iOS · Web (single React Native codebase) |
-| **Repository** | https://github.com/HARSHU101106/beauty_parlur_and_botique_app |
+| **Frontend** | React Native (Expo) + TypeScript |
 | **Backend** | Firebase (Auth · Firestore · Storage · Cloud Functions) |
+| **Payment Gateway** | Razorpay |
+| **Repository** | https://github.com/HARSHU101106/beauty_parlur_and_botique_app |
+| **Version** | 1.0.0 |
 | **Report Date** | June 2026 |
 
 ---
 
 ## Table of Contents
 
-1. [Executive Summary](#1-executive-summary)
-2. [Technology Stack](#2-technology-stack)
-3. [System Architecture](#3-system-architecture)
-4. [Development Phases](#4-development-phases)
-   - [Phase 1 — Planning & Requirements](#phase-1--planning--requirements)
-   - [Phase 2 — Project Setup & Tooling](#phase-2--project-setup--tooling)
-   - [Phase 3 — Authentication](#phase-3--authentication)
-   - [Phase 4 — Customer Module](#phase-4--customer-module)
-   - [Phase 5 — Payments & Instalments](#phase-5--payments--instalments)
-   - [Phase 6 — Admin Module](#phase-6--admin-module)
-   - [Phase 7 — Cloud Functions & Notifications](#phase-7--cloud-functions--notifications)
-   - [Phase 8 — Testing & Deployment](#phase-8--testing--deployment)
-5. [Data Model](#5-data-model)
-6. [Screenshots](#6-screenshots)
-7. [Security](#7-security)
-8. [Future Enhancements](#8-future-enhancements)
+1. [Existing System](#1-existing-system)
+2. [Proposed System](#2-proposed-system)
+3. [Requirements (Software & Hardware)](#3-requirements-software--hardware)
+4. [Project Modules](#4-project-modules)
+5. [Working Diagram](#5-working-diagram)
+6. [Output Screenshots](#6-output-screenshots)
 
 ---
 
-## 1. Executive Summary
+## 1. Existing System
 
-**Glamour** is a mobile + web application for a beauty parlour and boutique business
-("Gomu's Beauty Care & Boutique"). It lets **customers** browse and book salon
-services, shop boutique products, pre-book items, and pay online (full payment or
-instalments). A separate **admin** panel lets the owner manage the service catalog,
-products, bookings, payments, pre-orders, and customers.
+In the current manual setup, a beauty parlour and boutique business is operated
+**offline / on paper**, which leads to several limitations:
 
-The app is built from a **single React Native (Expo) codebase** that runs natively on
-Android/iOS and in the browser, backed by **Firebase** for authentication, database,
-file storage, and scheduled server logic.
+- **Manual booking** — Customers must call or visit in person to book a service.
+  There is no view of available time slots, leading to overbooking and clashes.
+- **Paper registers** — Bookings, customer details, and payments are recorded in
+  notebooks, which are easy to lose and hard to search.
+- **No online catalog** — Customers cannot browse the list of services or boutique
+  products with prices before visiting the shop.
+- **Cash-only payments** — Payments are collected manually; there is no online
+  payment, no instalment facility, and no digital receipt.
+- **No stock tracking** — Boutique product stock is counted by hand, so items often
+  get oversold or go out of stock without notice.
+- **No reminders** — Customers are not reminded about upcoming appointments, which
+  increases no-shows.
+- **No customer history** — The owner cannot easily see a customer's past bookings,
+  purchases, or feedback.
 
-**Key capabilities**
+**Drawbacks of the existing system**
 
-- Role-based experience: **Customer** (bottom tabs) vs **Admin** (drawer)
-- Service booking with date/time slots
-- Boutique shopping with **10-day pre-booking** and **4-part instalment** purchase
-- Online payments via **Razorpay** (web + native)
-- Automatic stock reduction and pre-booking expiry
-- Push notifications for booking reminders
-- Customer history: bookings, purchases, payments, feedback & ratings
-
----
-
-## 2. Technology Stack
-
-| Layer | Technology |
+| Problem | Impact |
 |---|---|
+| Manual booking by phone/visit | Time-consuming, slot clashes |
+| Paper records | Data loss, no quick search |
+| No online catalog | Customers unaware of services/prices |
+| Cash-only | No instalments, no digital proof |
+| Manual stock count | Overselling, stock errors |
+| No reminders | Frequent no-shows |
+
+---
+
+## 2. Proposed System
+
+The proposed system is **"Glamour"**, a single application (mobile + web) that
+**digitises the entire parlour and boutique workflow** with two roles —
+**Customer** and **Admin**.
+
+**What the proposed system provides**
+
+- **Online service booking** with date and time-slot selection, avoiding clashes.
+- **Digital catalogs** for beauty services and boutique products, split for
+  **women** and **kids**, with images and prices.
+- **Online payments via Razorpay** — full payment for services, and **pre-booking**
+  (10-day hold) or a **4-part instalment plan** for boutique products.
+- **Automatic stock management** — product stock reduces in a safe transaction when a
+  product is pre-booked, preventing overselling.
+- **Automatic pre-booking expiry** and **appointment reminders** through scheduled
+  Cloud Functions and push notifications.
+- **Customer history** — each customer can view their bookings, purchases, payments,
+  and feedback in one place.
+- **Admin panel** to manage services, products, bookings, payments, pre-orders, and
+  customers from a single dashboard.
+
+**Advantages of the proposed system**
+
+| Feature | Benefit |
+|---|---|
+| Online booking with slots | No clashes, 24×7 booking |
+| Cloud database (Firestore) | Safe, searchable, real-time data |
+| Online catalog | Customers see services/prices anytime |
+| Razorpay + instalments | Flexible, cashless, digital receipts |
+| Transaction-based stock | No overselling |
+| Push reminders | Fewer no-shows |
+| Role-based access | Secure customer vs admin views |
+
+---
+
+## 3. Requirements (Software & Hardware)
+
+### 3.1 Software Requirements
+
+| Category | Requirement |
+|---|---|
+| **Operating System** | Windows 10/11, macOS, or Linux (for development) |
+| **Runtime** | Node.js 18+ and npm |
 | **Framework** | Expo SDK 56, React Native 0.85, React 19 |
 | **Language** | TypeScript |
+| **IDE** | Visual Studio Code |
 | **Navigation** | React Navigation 7 (Stack · Bottom Tabs · Drawer) |
-| **State** | Zustand 5 |
-| **Styling/UI** | NativeWind 4 (Tailwind) + React Native Paper 5 |
-| **Backend** | Firebase JS SDK 12 (Auth · Firestore · Storage · Functions) |
-| **Payments** | Razorpay (`react-native-razorpay` + web checkout.js) |
-| **Auth providers** | Email/Password + Google (`expo-auth-session`) |
+| **State Management** | Zustand 5 |
+| **Styling / UI** | NativeWind 4 (Tailwind) + React Native Paper 5 |
+| **Backend / Database** | Firebase JS SDK 12 (Auth · Firestore · Storage · Functions) |
+| **Payment Gateway** | Razorpay (`react-native-razorpay` + web checkout.js) |
 | **Notifications** | `expo-notifications` + Firebase Cloud Messaging |
-| **Server logic** | Firebase Cloud Functions v2 (scheduled + HTTPS) |
-| **Build/Deploy** | EAS Build (cloud APK / AAB) |
-| **Admin scripts** | `firebase-admin` (seed, set-admin, replace-services) |
+| **Build / Deploy** | EAS Build (cloud APK / AAB) |
+| **Mobile (end user)** | Android 7.0+ / iOS 13+, or any modern web browser |
 
----
+### 3.2 Hardware Requirements
 
-## 3. System Architecture
-
-```mermaid
-flowchart TB
-    subgraph Client["📱 Client — React Native (Expo)"]
-        UI["UI Screens & Components<br/>(NativeWind + Paper)"]
-        NAV["React Navigation<br/>Stack / Tabs / Drawer"]
-        STORE["Zustand authStore"]
-        SVC["Service Layer<br/>(serviceService, paymentService,<br/>productService, ...)"]
-    end
-
-    subgraph Firebase["☁️ Firebase Backend"]
-        AUTH["Firebase Auth"]
-        FS["Cloud Firestore"]
-        STG["Cloud Storage"]
-        FN["Cloud Functions v2"]
-        FCM["Cloud Messaging"]
-    end
-
-    RZP["💳 Razorpay"]
-
-    UI --> NAV --> STORE
-    UI --> SVC
-    SVC --> AUTH
-    SVC --> FS
-    SVC --> STG
-    SVC --> RZP
-    FN --> FS
-    FN --> FCM
-    RZP -. webhook .-> FN
-    FCM -. push .-> UI
-```
-
-**Layered design**
-
-- **Screens** render the UI and call into the **service layer**.
-- The **service layer** (`src/services/*`) encapsulates all Firebase/Razorpay calls,
-  keeping screens free of backend logic.
-- **Zustand** holds the authenticated user and drives which navigator is shown.
-- **Cloud Functions** run server-side jobs (expiry, reminders, payment webhook).
-
----
-
-## 4. Development Phases
-
-### Phase 1 — Planning & Requirements
-
-**Goal:** Define the business domain, user roles, and feature set.
-
-| Requirement | Decision |
+| Category | Requirement |
 |---|---|
-| Two user roles | Customer & Admin, resolved from `users/{uid}.role` |
-| Two product lines | Beauty **services** and boutique **products** |
-| Audience split | `women` and `kids` catalogs |
-| Payment options | Services = full payment; Products = pre-book or 4-instalments |
-| Catalog source | Real menu/prices from the parlour |
-
-```mermaid
-flowchart LR
-    A[Business needs] --> B{User role?}
-    B -->|Customer| C[Browse · Book · Shop · Pay]
-    B -->|Admin| D[Manage catalog · bookings · payments]
-    C --> E[Firestore data]
-    D --> E
-```
+| **Development machine** | Intel i3 or higher, **4 GB RAM** (8 GB recommended) |
+| **Storage** | Minimum 5 GB free disk space (SDK, dependencies, builds) |
+| **Internet** | Required (Firebase, Razorpay, EAS cloud builds) |
+| **End-user device** | Android/iOS smartphone or PC with a web browser |
+| **Server** | None self-hosted — runs on **Firebase serverless** infrastructure |
 
 ---
 
-### Phase 2 — Project Setup & Tooling
+## 4. Project Modules
 
-**Goal:** Establish the Expo + Firebase + TypeScript foundation.
+The application is divided into the following modules.
 
-- Initialised an **Expo** project with TypeScript and the `src/` structure
-  (`screens`, `components`, `services`, `navigation`, `store`, `types`, `constants`).
-- Configured **NativeWind/Tailwind** and **React Native Paper** for styling.
-- Set up **Firebase** via environment variables injected through
-  [app.config.ts](../app.config.ts) `extra` (no secrets committed).
-- Created **admin scripts** (`scripts/`) using `firebase-admin` to seed and maintain
-  data (`seed`, `set-admin`, `replace-services`).
-
-```text
-src/
-├── components/     reusable UI (cards, buttons, headers, rating)
-├── navigation/     RootNavigator, CustomerTabs, AdminDrawer, AuthNavigator
-├── screens/        auth/ · customer/ · admin/
-├── services/       firebase + domain services (bookings, payments, products...)
-├── store/          authStore (Zustand)
-├── types/          shared TypeScript interfaces
-└── constants/      colours, shadows, config
-```
-
----
-
-### Phase 3 — Authentication
-
-**Goal:** Secure sign-up/sign-in and role-based routing.
+### 4.1 Authentication Module
 
 - **Email/Password** and **Google** sign-in on the Login screen.
-- On auth state change, the app loads `users/{uid}` and routes to the correct stack.
-- **React Native persistence fix:** auth is initialised with
-  `initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) })` on
-  native so sessions survive app restarts; `getAuth(app)` is used on web.
+- Sign-up, login, and **forgot-password** screens.
+- On login, the app loads `users/{uid}` and routes the user based on **role**
+  (customer → tabs, admin → drawer).
+- **Session persistence** on mobile using `initializeAuth` +
+  `getReactNativePersistence(AsyncStorage)` so the user stays logged in after
+  restarting the app.
 
 ```mermaid
 flowchart TD
@@ -191,13 +153,9 @@ flowchart TD
     Role -->|admin| Drawer[Admin Drawer]
 ```
 
----
+### 4.2 Customer Module
 
-### Phase 4 — Customer Module
-
-**Goal:** Browsing, booking, shopping, and history for customers.
-
-**Bottom-tab navigation:** Home · Beauty · Boutique · Kids · Account.
+Bottom-tab navigation: **Home · Beauty · Boutique · Kids · Account**.
 
 | Area | Screens |
 |---|---|
@@ -233,20 +191,15 @@ flowchart TD
     E --> G[PreBooking + Instalment plan<br/>record 1st payment]
 ```
 
----
-
-### Phase 5 — Payments & Instalments
-
-**Goal:** Flexible, reliable online payments.
+### 4.3 Payment & Instalment Module
 
 - **Razorpay** integration works on both **web** (checkout.js) and **native**
-  (`react-native-razorpay`, lazy-loaded to avoid bundling issues).
-- **Services** are **full payment only**.
-- **Boutique products** support a **4-part instalment plan**
-  (`maxInstalments = 4`); the plan records `instalmentAmount` and
-  `numberOfInstalments`, and each payment is appended to the `instalments` array.
-- A **Cloud Function webhook** verifies Razorpay signatures (HMAC SHA-256) and marks
-  payments/bookings as paid server-side.
+  (`react-native-razorpay`, lazy-loaded).
+- **Services** are **full payment** only.
+- **Boutique products** support a **4-part instalment plan**; each payment is added to
+  the `instalments` array.
+- A **Cloud Function webhook** verifies the Razorpay signature (HMAC SHA-256) and
+  marks payments/bookings as paid on the server.
 
 ```mermaid
 flowchart LR
@@ -257,24 +210,19 @@ flowchart LR
     D --> F[booking/preBooking → paymentStatus paid]
 ```
 
----
+### 4.4 Admin Module
 
-### Phase 6 — Admin Module
-
-**Goal:** Full back-office control via a drawer navigator.
+Drawer navigation for the parlour owner.
 
 | Screen | Purpose |
 |---|---|
-| `DashboardScreen` | Business overview |
-| `ServicesScreen` | Create/edit/disable services |
+| `DashboardScreen` | Business overview (bookings, revenue, outstanding) |
+| `ServicesScreen` | Create / edit / disable services |
 | `ProductsScreen` | Manage boutique inventory |
 | `AdminBookingsScreen` | View & update booking statuses |
 | `AdminPaymentsScreen` | Track payments & instalments |
 | `AdminPreOrdersScreen` | Manage pre-bookings |
 | `CustomersScreen` | Customer directory |
-
-- Admin access is granted via the `set-admin` script (custom role in Firestore).
-- The drawer includes a pinned **Logout** action with a confirmation dialog.
 
 ```mermaid
 flowchart TD
@@ -288,20 +236,16 @@ flowchart TD
     Admin --> Out[Logout]
 ```
 
----
-
-### Phase 7 — Cloud Functions & Notifications
-
-**Goal:** Automate server-side jobs and engage customers.
+### 4.5 Cloud Functions & Notifications Module
 
 Implemented in [functions/src/index.ts](../functions/src/index.ts):
 
-1. **`expirePreBookings`** — scheduled daily (00:00 IST); marks expired
-   pre-bookings (`status = expired`).
-2. **`sendBookingReminder`** — scheduled hourly; sends an FCM push to customers
-   whose confirmed booking is the next day.
-3. **`razorpayWebhook`** — HTTPS endpoint; verifies the Razorpay signature and
-   updates payment/booking status on `payment.captured`.
+1. **`expirePreBookings`** — scheduled daily; marks expired pre-bookings as
+   `expired`.
+2. **`sendBookingReminder`** — scheduled hourly; sends an FCM push to customers whose
+   confirmed booking is the next day.
+3. **`razorpayWebhook`** — HTTPS endpoint; verifies the Razorpay signature and updates
+   payment/booking status on `payment.captured`.
 
 ```mermaid
 flowchart TD
@@ -317,34 +261,7 @@ flowchart TD
     F3 --> FS
 ```
 
----
-
-### Phase 8 — Testing & Deployment
-
-**Goal:** Validate and ship the app.
-
-- **Type safety:** full `tsc --noEmit` passes with zero errors.
-- **Web preview:** verified flows on `localhost:8081`.
-- **Device builds:** EAS cloud builds —
-  - `development` — dev client (needs Metro server)
-  - `preview` — standalone **APK** for free direct install/sharing
-  - `production` — **AAB** for the Google Play Store
-- **Firestore rules & indexes** deployed to the live project.
-- **Distribution options:** free APK share (QR/link), web hosting, or Play Store.
-
-```mermaid
-flowchart LR
-    Code[Code + tsc check] --> Web[Web preview test]
-    Web --> Build{EAS build profile}
-    Build -->|preview| APK[Standalone APK<br/>free share]
-    Build -->|production| AAB[AAB → Play Store]
-    APK --> Test[Device testing]
-    Test --> Release[Release]
-```
-
----
-
-## 5. Data Model
+### 4.6 Data Model (Database Module)
 
 Core Firestore collections (from [src/types/index.ts](../src/types/index.ts)):
 
@@ -355,7 +272,7 @@ Core Firestore collections (from [src/types/index.ts](../src/types/index.ts)):
 | `products` | `name`, `price`, `category`, `stockCount`, `audience`, `isActive` |
 | `bookings` | `customerId`, `serviceId`, `date`, `timeSlot`, `status`, `paymentStatus` |
 | `preBookings` | `customerId`, `productId`, `quantity`, `status`, `expiresAt` |
-| `payments` | `referenceType`, `referenceId`, `totalAmount`, `paidAmount`, `instalments[]`, `paymentMode` |
+| `payments` | `referenceType`, `referenceId`, `totalAmount`, `paidAmount`, `instalments[]` |
 | `feedback` | `customerId`, `serviceId`, `rating`, `comment` |
 
 ```mermaid
@@ -373,7 +290,59 @@ erDiagram
 
 ---
 
-## 6. Screenshots
+## 5. Working Diagram
+
+### 5.1 Overall System Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client["📱 Client — React Native (Expo)"]
+        UI["UI Screens & Components<br/>(NativeWind + Paper)"]
+        NAV["React Navigation<br/>Stack / Tabs / Drawer"]
+        STORE["Zustand authStore"]
+        SVC["Service Layer<br/>(serviceService, paymentService,<br/>productService, ...)"]
+    end
+
+    subgraph Firebase["☁️ Firebase Backend"]
+        AUTH["Firebase Auth"]
+        FS["Cloud Firestore"]
+        STG["Cloud Storage"]
+        FN["Cloud Functions v2"]
+        FCM["Cloud Messaging"]
+    end
+
+    RZP["💳 Razorpay"]
+
+    UI --> NAV --> STORE
+    UI --> SVC
+    SVC --> AUTH
+    SVC --> FS
+    SVC --> STG
+    SVC --> RZP
+    FN --> FS
+    FN --> FCM
+    RZP -. webhook .-> FN
+    FCM -. push .-> UI
+```
+
+### 5.2 End-to-End Working Flow
+
+```mermaid
+flowchart LR
+    U([User]) --> L[Login / Signup]
+    L --> R{Role?}
+    R -->|Customer| C[Browse · Book · Shop]
+    R -->|Admin| A[Manage catalog · bookings · payments]
+    C --> P[Razorpay payment]
+    P --> DB[(Firestore)]
+    A --> DB
+    DB --> FN[Cloud Functions<br/>expiry · reminders · webhook]
+    FN --> N[Push notifications]
+```
+
+---
+
+## 6. Output Screenshots
 
 > Captured from the running web build. (Catalog image thumbnails are blocked by the
 > browser's image policy in the local preview but load normally on device.)
@@ -402,28 +371,4 @@ erDiagram
 
 ---
 
-## 7. Security
-
-- **Secrets are never committed.** `.env`, `google-services.json`, and
-  `scripts/serviceAccountKey.json` are git-ignored; only `.env.example` (placeholder
-  names) is in the repo.
-- **Firestore Security Rules** enforce ownership: customers can only read/update their
-  own bookings, pre-bookings, and payments, and may decrement product `stockCount` by
-  exactly 1.
-- **Razorpay key separation:** only the publishable **Key ID** is shipped in the app;
-  the **Key Secret** / webhook secret stay server-side (Cloud Functions secrets).
-- **Webhook verification** uses constant-time HMAC SHA-256 signature comparison.
-
----
-
-## 8. Future Enhancements
-
-- Complete **Google Sign-In on Android** (register OAuth client SHA-1 + client ID).
-- Server-side **Razorpay order creation** for stronger payment integrity.
-- **In-app notifications centre** and richer admin analytics/dashboards.
-- **Search & filtering** improvements across catalogs.
-- Publish to the **Google Play Store** (production AAB is build-ready).
-
----
-
-*Generated as a structured project report for the Glamour Beauty & Boutique App.*
+*Project report for the Glamour Beauty Parlour & Boutique Management Application.*

@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PROJECT_REPORT.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="glamour--beauty-parlour--boutique-management-app">Glamour — Beauty Parlour &amp; Boutique Management App</h1>
+<h3 id="project-report">Project Report</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Project Title</strong></td>
+<td>Glamour — Beauty Parlour &amp; Boutique Management Application</td>
+</tr>
+<tr>
+<td><strong>Application Type</strong></td>
+<td>Cross-platform Mobile + Web Application</td>
+</tr>
+<tr>
+<td><strong>Platforms</strong></td>
+<td>Android · iOS · Web (single React Native codebase)</td>
+</tr>
+<tr>
+<td><strong>Frontend</strong></td>
+<td>React Native (Expo) + TypeScript</td>
+</tr>
+<tr>
+<td><strong>Backend</strong></td>
+<td>Firebase (Auth · Firestore · Storage · Cloud Functions)</td>
+</tr>
+<tr>
+<td><strong>Payment Gateway</strong></td>
+<td>Razorpay</td>
+</tr>
+<tr>
+<td><strong>Repository</strong></td>
+<td>https://github.com/HARSHU101106/beauty_parlur_and_botique_app</td>
+</tr>
+<tr>
+<td><strong>Version</strong></td>
+<td>1.0.0</td>
+</tr>
+<tr>
+<td><strong>Report Date</strong></td>
+<td>June 2026</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="#1-existing-system">Existing System</a></li>
+<li><a href="#2-proposed-system">Proposed System</a></li>
+<li><a href="#3-requirements-software--hardware">Requirements (Software &amp; Hardware)</a></li>
+<li><a href="#4-project-modules">Project Modules</a></li>
+<li><a href="#5-working-diagram">Working Diagram</a></li>
+<li><a href="#6-output-screenshots">Output Screenshots</a></li>
+</ol>
+<hr>
+<h2 id="1-existing-system">1. Existing System</h2>
+<p>In the current manual setup, a beauty parlour and boutique business is operated
+<strong>offline / on paper</strong>, which leads to several limitations:</p>
+<ul>
+<li><strong>Manual booking</strong> — Customers must call or visit in person to book a service.
+There is no view of available time slots, leading to overbooking and clashes.</li>
+<li><strong>Paper registers</strong> — Bookings, customer details, and payments are recorded in
+notebooks, which are easy to lose and hard to search.</li>
+<li><strong>No online catalog</strong> — Customers cannot browse the list of services or boutique
+products with prices before visiting the shop.</li>
+<li><strong>Cash-only payments</strong> — Payments are collected manually; there is no online
+payment, no instalment facility, and no digital receipt.</li>
+<li><strong>No stock tracking</strong> — Boutique product stock is counted by hand, so items often
+get oversold or go out of stock without notice.</li>
+<li><strong>No reminders</strong> — Customers are not reminded about upcoming appointments, which
+increases no-shows.</li>
+<li><strong>No customer history</strong> — The owner cannot easily see a customer's past bookings,
+purchases, or feedback.</li>
+</ul>
+<p><strong>Drawbacks of the existing system</strong></p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Manual booking by phone/visit</td>
+<td>Time-consuming, slot clashes</td>
+</tr>
+<tr>
+<td>Paper records</td>
+<td>Data loss, no quick search</td>
+</tr>
+<tr>
+<td>No online catalog</td>
+<td>Customers unaware of services/prices</td>
+</tr>
+<tr>
+<td>Cash-only</td>
+<td>No instalments, no digital proof</td>
+</tr>
+<tr>
+<td>Manual stock count</td>
+<td>Overselling, stock errors</td>
+</tr>
+<tr>
+<td>No reminders</td>
+<td>Frequent no-shows</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="2-proposed-system">2. Proposed System</h2>
+<p>The proposed system is <strong>&quot;Glamour&quot;</strong>, a single application (mobile + web) that
+<strong>digitises the entire parlour and boutique workflow</strong> with two roles —
+<strong>Customer</strong> and <strong>Admin</strong>.</p>
+<p><strong>What the proposed system provides</strong></p>
+<ul>
+<li><strong>Online service booking</strong> with date and time-slot selection, avoiding clashes.</li>
+<li><strong>Digital catalogs</strong> for beauty services and boutique products, split for
+<strong>women</strong> and <strong>kids</strong>, with images and prices.</li>
+<li><strong>Online payments via Razorpay</strong> — full payment for services, and <strong>pre-booking</strong>
+(10-day hold) or a <strong>4-part instalment plan</strong> for boutique products.</li>
+<li><strong>Automatic stock management</strong> — product stock reduces in a safe transaction when a
+product is pre-booked, preventing overselling.</li>
+<li><strong>Automatic pre-booking expiry</strong> and <strong>appointment reminders</strong> through scheduled
+Cloud Functions and push notifications.</li>
+<li><strong>Customer history</strong> — each customer can view their bookings, purchases, payments,
+and feedback in one place.</li>
+<li><strong>Admin panel</strong> to manage services, products, bookings, payments, pre-orders, and
+customers from a single dashboard.</li>
+</ul>
+<p><strong>Advantages of the proposed system</strong></p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Online booking with slots</td>
+<td>No clashes, 24×7 booking</td>
+</tr>
+<tr>
+<td>Cloud database (Firestore)</td>
+<td>Safe, searchable, real-time data</td>
+</tr>
+<tr>
+<td>Online catalog</td>
+<td>Customers see services/prices anytime</td>
+</tr>
+<tr>
+<td>Razorpay + instalments</td>
+<td>Flexible, cashless, digital receipts</td>
+</tr>
+<tr>
+<td>Transaction-based stock</td>
+<td>No overselling</td>
+</tr>
+<tr>
+<td>Push reminders</td>
+<td>Fewer no-shows</td>
+</tr>
+<tr>
+<td>Role-based access</td>
+<td>Secure customer vs admin views</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="3-requirements-software--hardware">3. Requirements (Software &amp; Hardware)</h2>
+<h3 id="31-software-requirements">3.1 Software Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Operating System</strong></td>
+<td>Windows 10/11, macOS, or Linux (for development)</td>
+</tr>
+<tr>
+<td><strong>Runtime</strong></td>
+<td>Node.js 18+ and npm</td>
+</tr>
+<tr>
+<td><strong>Framework</strong></td>
+<td>Expo SDK 56, React Native 0.85, React 19</td>
+</tr>
+<tr>
+<td><strong>Language</strong></td>
+<td>TypeScript</td>
+</tr>
+<tr>
+<td><strong>IDE</strong></td>
+<td>Visual Studio Code</td>
+</tr>
+<tr>
+<td><strong>Navigation</strong></td>
+<td>React Navigation 7 (Stack · Bottom Tabs · Drawer)</td>
+</tr>
+<tr>
+<td><strong>State Management</strong></td>
+<td>Zustand 5</td>
+</tr>
+<tr>
+<td><strong>Styling / UI</strong></td>
+<td>NativeWind 4 (Tailwind) + React Native Paper 5</td>
+</tr>
+<tr>
+<td><strong>Backend / Database</strong></td>
+<td>Firebase JS SDK 12 (Auth · Firestore · Storage · Functions)</td>
+</tr>
+<tr>
+<td><strong>Payment Gateway</strong></td>
+<td>Razorpay (<code>react-native-razorpay</code> + web checkout.js)</td>
+</tr>
+<tr>
+<td><strong>Notifications</strong></td>
+<td><code>expo-notifications</code> + Firebase Cloud Messaging</td>
+</tr>
+<tr>
+<td><strong>Build / Deploy</strong></td>
+<td>EAS Build (cloud APK / AAB)</td>
+</tr>
+<tr>
+<td><strong>Mobile (end user)</strong></td>
+<td>Android 7.0+ / iOS 13+, or any modern web browser</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-hardware-requirements">3.2 Hardware Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Development machine</strong></td>
+<td>Intel i3 or higher, <strong>4 GB RAM</strong> (8 GB recommended)</td>
+</tr>
+<tr>
+<td><strong>Storage</strong></td>
+<td>Minimum 5 GB free disk space (SDK, dependencies, builds)</td>
+</tr>
+<tr>
+<td><strong>Internet</strong></td>
+<td>Required (Firebase, Razorpay, EAS cloud builds)</td>
+</tr>
+<tr>
+<td><strong>End-user device</strong></td>
+<td>Android/iOS smartphone or PC with a web browser</td>
+</tr>
+<tr>
+<td><strong>Server</strong></td>
+<td>None self-hosted — runs on <strong>Firebase serverless</strong> infrastructure</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="4-project-modules">4. Project Modules</h2>
+<p>The application is divided into the following modules.</p>
+<h3 id="41-authentication-module">4.1 Authentication Module</h3>
+<ul>
+<li><strong>Email/Password</strong> and <strong>Google</strong> sign-in on the Login screen.</li>
+<li>Sign-up, login, and <strong>forgot-password</strong> screens.</li>
+<li>On login, the app loads <code>users/{uid}</code> and routes the user based on <strong>role</strong>
+(customer → tabs, admin → drawer).</li>
+<li><strong>Session persistence</strong> on mobile using <code>initializeAuth</code> +
+<code>getReactNativePersistence(AsyncStorage)</code> so the user stays logged in after
+restarting the app.</li>
+</ul>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    Start([App launch]) --> Boot{onAuthStateChanged}
+    Boot -->|No user| Login[Auth Stack<br/>Login / Signup / Forgot]
+    Boot -->|User found| Load[Load users/uid profile]
+    Login -->|Sign in success| Load
+    Load --> Role{role?}
+    Role -->|customer| Tabs[Customer Bottom Tabs]
+    Role -->|admin| Drawer[Admin Drawer]
+</div></code></pre>
+<h3 id="42-customer-module">4.2 Customer Module</h3>
+<p>Bottom-tab navigation: <strong>Home · Beauty · Boutique · Kids · Account</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Screens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Discovery</td>
+<td><code>HomeScreen</code>, <code>ServiceListScreen</code>, <code>ProductListScreen</code>, <code>KidsScreen</code></td>
+</tr>
+<tr>
+<td>Details</td>
+<td><code>ServiceDetailScreen</code>, <code>ProductDetailScreen</code></td>
+</tr>
+<tr>
+<td>Transactions</td>
+<td><code>BookingScreen</code>, <code>PreBookScreen</code>, <code>PaymentDetailScreen</code></td>
+</tr>
+<tr>
+<td>History</td>
+<td><code>MyBookingsScreen</code>, <code>MyPreOrdersScreen</code>, <code>MyPaymentsScreen</code>, <code>FeedbackHistoryScreen</code></td>
+</tr>
+<tr>
+<td>Other</td>
+<td><code>AccountScreen</code>, <code>NotificationScreen</code>, <code>FeedbackScreen</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Service booking flow</strong></p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    A[Beauty tab] --> B[Service list<br/>filter by category]
+    B --> C[Service detail]
+    C --> D[Book Now]
+    D --> E[Pick date & time slot]
+    E --> F[Confirm — full payment]
+    F --> G[Razorpay checkout]
+    G -->|success| H[Booking created<br/>paymentStatus = paid]
+    G -->|pay at counter| I[Booking created<br/>paymentStatus = unpaid]
+</div></code></pre>
+<p><strong>Boutique purchase flow</strong></p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    A[Boutique tab] --> B[Product detail]
+    B --> C{Choose}
+    C -->|Pre-book 10 days| D[runTransaction:<br/>stockCount − 1]
+    C -->|Buy in instalments| E[Charge 1st of 4 instalments]
+    D --> F[PreBooking: status active<br/>expiresAt = +10 days]
+    E --> G[PreBooking + Instalment plan<br/>record 1st payment]
+</div></code></pre>
+<h3 id="43-payment--instalment-module">4.3 Payment &amp; Instalment Module</h3>
+<ul>
+<li><strong>Razorpay</strong> integration works on both <strong>web</strong> (checkout.js) and <strong>native</strong>
+(<code>react-native-razorpay</code>, lazy-loaded).</li>
+<li><strong>Services</strong> are <strong>full payment</strong> only.</li>
+<li><strong>Boutique products</strong> support a <strong>4-part instalment plan</strong>; each payment is added to
+the <code>instalments</code> array.</li>
+<li>A <strong>Cloud Function webhook</strong> verifies the Razorpay signature (HMAC SHA-256) and
+marks payments/bookings as paid on the server.</li>
+</ul>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    A[Customer pays] --> B[Razorpay checkout]
+    B --> C[payment.captured event]
+    C --> D[Cloud Function webhook<br/>verify HMAC signature]
+    D --> E[payments/&#123;id&#125; → status paid]
+    D --> F[booking/preBooking → paymentStatus paid]
+</div></code></pre>
+<h3 id="44-admin-module">4.4 Admin Module</h3>
+<p>Drawer navigation for the parlour owner.</p>
+<table>
+<thead>
+<tr>
+<th>Screen</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DashboardScreen</code></td>
+<td>Business overview (bookings, revenue, outstanding)</td>
+</tr>
+<tr>
+<td><code>ServicesScreen</code></td>
+<td>Create / edit / disable services</td>
+</tr>
+<tr>
+<td><code>ProductsScreen</code></td>
+<td>Manage boutique inventory</td>
+</tr>
+<tr>
+<td><code>AdminBookingsScreen</code></td>
+<td>View &amp; update booking statuses</td>
+</tr>
+<tr>
+<td><code>AdminPaymentsScreen</code></td>
+<td>Track payments &amp; instalments</td>
+</tr>
+<tr>
+<td><code>AdminPreOrdersScreen</code></td>
+<td>Manage pre-bookings</td>
+</tr>
+<tr>
+<td><code>CustomersScreen</code></td>
+<td>Customer directory</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    Admin[Admin Drawer] --> Dash[Dashboard]
+    Admin --> Svc[Services]
+    Admin --> Prod[Products]
+    Admin --> Bk[Bookings]
+    Admin --> Pay[Payments]
+    Admin --> Pre[Pre-Orders]
+    Admin --> Cust[Customers]
+    Admin --> Out[Logout]
+</div></code></pre>
+<h3 id="45-cloud-functions--notifications-module">4.5 Cloud Functions &amp; Notifications Module</h3>
+<p>Implemented in <a href="../functions/src/index.ts">functions/src/index.ts</a>:</p>
+<ol>
+<li><strong><code>expirePreBookings</code></strong> — scheduled daily; marks expired pre-bookings as
+<code>expired</code>.</li>
+<li><strong><code>sendBookingReminder</code></strong> — scheduled hourly; sends an FCM push to customers whose
+confirmed booking is the next day.</li>
+<li><strong><code>razorpayWebhook</code></strong> — HTTPS endpoint; verifies the Razorpay signature and updates
+payment/booking status on <code>payment.captured</code>.</li>
+</ol>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    subgraph Scheduled
+      T1[Daily 00:00 IST] --> F1[expirePreBookings]
+      T2[Hourly] --> F2[sendBookingReminder]
+    end
+    subgraph HTTPS
+      R[Razorpay] --> F3[razorpayWebhook]
+    end
+    F1 --> FS[(Firestore)]
+    F2 --> FCM[(Push notification)]
+    F3 --> FS
+</div></code></pre>
+<h3 id="46-data-model-database-module">4.6 Data Model (Database Module)</h3>
+<p>Core Firestore collections (from <a href="../src/types/index.ts">src/types/index.ts</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Collection</th>
+<th>Key fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>users</code></td>
+<td><code>uid</code>, <code>name</code>, <code>email</code>, <code>phone</code>, <code>role</code>, <code>fcmToken</code></td>
+</tr>
+<tr>
+<td><code>services</code></td>
+<td><code>name</code>, <code>price</code>, <code>duration</code>, <code>category</code>, <code>audience</code>, <code>isActive</code></td>
+</tr>
+<tr>
+<td><code>products</code></td>
+<td><code>name</code>, <code>price</code>, <code>category</code>, <code>stockCount</code>, <code>audience</code>, <code>isActive</code></td>
+</tr>
+<tr>
+<td><code>bookings</code></td>
+<td><code>customerId</code>, <code>serviceId</code>, <code>date</code>, <code>timeSlot</code>, <code>status</code>, <code>paymentStatus</code></td>
+</tr>
+<tr>
+<td><code>preBookings</code></td>
+<td><code>customerId</code>, <code>productId</code>, <code>quantity</code>, <code>status</code>, <code>expiresAt</code></td>
+</tr>
+<tr>
+<td><code>payments</code></td>
+<td><code>referenceType</code>, <code>referenceId</code>, <code>totalAmount</code>, <code>paidAmount</code>, <code>instalments[]</code></td>
+</tr>
+<tr>
+<td><code>feedback</code></td>
+<td><code>customerId</code>, <code>serviceId</code>, <code>rating</code>, <code>comment</code></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid"><div class="mermaid">erDiagram
+    USERS ||--o{ BOOKINGS : makes
+    USERS ||--o{ PREBOOKINGS : places
+    USERS ||--o{ PAYMENTS : pays
+    USERS ||--o{ FEEDBACK : writes
+    SERVICES ||--o{ BOOKINGS : "booked in"
+    SERVICES ||--o{ FEEDBACK : "reviewed in"
+    PRODUCTS ||--o{ PREBOOKINGS : "reserved in"
+    BOOKINGS ||--o| PAYMENTS : "paid by"
+    PREBOOKINGS ||--o| PAYMENTS : "paid by"
+</div></code></pre>
+<hr>
+<h2 id="5-working-diagram">5. Working Diagram</h2>
+<h3 id="51-overall-system-architecture">5.1 Overall System Architecture</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TB
+    subgraph Client["📱 Client — React Native (Expo)"]
+        UI["UI Screens & Components<br/>(NativeWind + Paper)"]
+        NAV["React Navigation<br/>Stack / Tabs / Drawer"]
+        STORE["Zustand authStore"]
+        SVC["Service Layer<br/>(serviceService, paymentService,<br/>productService, ...)"]
+    end
+
+    subgraph Firebase["☁️ Firebase Backend"]
+        AUTH["Firebase Auth"]
+        FS["Cloud Firestore"]
+        STG["Cloud Storage"]
+        FN["Cloud Functions v2"]
+        FCM["Cloud Messaging"]
+    end
+
+    RZP["💳 Razorpay"]
+
+    UI --> NAV --> STORE
+    UI --> SVC
+    SVC --> AUTH
+    SVC --> FS
+    SVC --> STG
+    SVC --> RZP
+    FN --> FS
+    FN --> FCM
+    RZP -. webhook .-> FN
+    FCM -. push .-> UI
+</div></code></pre>
+<h3 id="52-end-to-end-working-flow">5.2 End-to-End Working Flow</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    U([User]) --> L[Login / Signup]
+    L --> R{Role?}
+    R -->|Customer| C[Browse · Book · Shop]
+    R -->|Admin| A[Manage catalog · bookings · payments]
+    C --> P[Razorpay payment]
+    P --> DB[(Firestore)]
+    A --> DB
+    DB --> FN[Cloud Functions<br/>expiry · reminders · webhook]
+    FN --> N[Push notifications]
+</div></code></pre>
+<hr>
+<h2 id="6-output-screenshots">6. Output Screenshots</h2>
+<blockquote>
+<p>Captured from the running web build. (Catalog image thumbnails are blocked by the
+browser's image policy in the local preview but load normally on device.)</p>
+</blockquote>
+<h3 id="authentication">Authentication</h3>
+<table>
+<thead>
+<tr>
+<th>Login</th>
+<th>Sign Up</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="screenshots/01-login.png" alt="Login screen"></td>
+<td><img src="screenshots/02-signup.png" alt="Signup screen"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="customer--home--catalogs">Customer — Home &amp; Catalogs</h3>
+<table>
+<thead>
+<tr>
+<th>Home</th>
+<th>Beauty Services</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="screenshots/03-home.png" alt="Home screen"></td>
+<td><img src="screenshots/04-services.png" alt="Services screen"></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Boutique</th>
+<th>Kids Corner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="screenshots/05-boutique.png" alt="Boutique screen"></td>
+<td><img src="screenshots/06-kids.png" alt="Kids screen"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="customer--details--account">Customer — Details &amp; Account</h3>
+<table>
+<thead>
+<tr>
+<th>Service Detail (Book Now)</th>
+<th>Account</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="screenshots/08-service-detail.png" alt="Service detail"></td>
+<td><img src="screenshots/07-account.png" alt="Account screen"></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><em>Project report for the Glamour Beauty Parlour &amp; Boutique Management Application.</em></p>
+
+</body>
+</html>
