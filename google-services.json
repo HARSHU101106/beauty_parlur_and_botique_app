@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "524717348722",
+    "project_id": "beauty-parlour-app-18445",
+    "storage_bucket": "beauty-parlour-app-18445.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524717348722:android:3db59a2408d321111cefeb",
+        "android_client_info": {
+          "package_name": "com.beautyapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "524717348722-drdj149g97suksi013r9kuho7vqn809n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlnF5wLkCs_6xw3X5-B4qZbWpEfhBuBsw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "524717348722-drdj149g97suksi013r9kuho7vqn809n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
